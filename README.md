@@ -224,3 +224,6 @@ Some parts of this project are complete, some are partial, and some are not buil
 ## License
 
 MIT. Built for Hacktoberfest 2026.
+
+<img width="1000" height="420" alt="roam_cover_devto" src="https://github.com/user-attachments/assets/1c44fdda-2fd8-45d6-a53f-466d86baff50" />
+
