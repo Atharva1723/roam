@@ -1,0 +1,410 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Roam | Touch Grass AI Field Guide</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="app-container">
+      <!-- Header -->
+      <header class="app-header">
+        <div class="badge-row">
+          <span class="badge theme-badge">🌿 Theme: Touch Grass</span>
+          <span id="net-badge" class="badge net-badge" title="Network connectivity">• checking…</span>
+          <span id="model-badge" class="badge sponsor-badge" title="Which model answered">model: …</span>
+        </div>
+        <h1 class="logo-title">Ro<span>am</span></h1>
+        <p class="tagline">
+          The Screen-Free, Voice-First Trail Naturalist. Put your phone in your
+          pocket and listen to the woods. Say
+          <strong>"Hey <span class="assistant-name">roam</span>"</strong> to ask
+          a question.
+        </p>
+      </header>
+
+      <!-- Pocket Mode Notice -->
+      <div class="pocket-mode-banner">
+        <span class="icon">🎧</span>
+        <div class="banner-text">
+          <strong>Designed for Earbuds:</strong> The screen is the shortest part
+          of the experience. Hit <em>Start Hike</em>, turn on hands-free
+          listening, lock your phone, and just ask.
+        </div>
+      </div>
+
+      <!-- Offline mode notice (shown/hidden by app.js based on connectivity) -->
+      <div id="offline-banner" class="offline-banner" hidden>
+        <span class="icon">📴</span>
+        <div class="banner-text">
+          <strong>You're offline.</strong> Chat, trail search, hike planning,
+          memory, and the journal all still work on this device. Live weather
+          and hands-free voice input need a connection — roam will say so rather
+          than guess.
+        </div>
+      </div>
+
+      <!-- Main Controller Card -->
+      <main class="main-card">
+        <div class="control-center">
+          <button id="btn-start-hike" class="btn-primary">
+            <span class="btn-icon">🌲</span>
+            <span id="btn-text">START TRAIL HIKE (AUDIO MODE)</span>
+          </button>
+        </div>
+
+        <!-- Live Audio Waveform & Status -->
+        <div class="audio-status-card" id="audio-panel">
+          <div class="status-indicator">
+            <span class="pulse-dot" id="pulse-dot"></span>
+            <span id="status-label"
+              >Standby — Press Start to hit the trail</span
+            >
+          </div>
+
+          <div class="waveform" id="waveform">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+          </div>
+
+          <div class="narrator-box">
+            <div class="narrator-header">
+              <span class="ranger-tag"
+                >🎙️ <span class="assistant-name">roam</span>, park
+                naturalist</span
+              >
+              <span class="model-tag" id="model-tag">Open-weight model</span>
+            </div>
+            <p id="narrator-text" class="narrator-text">
+              "Welcome to the trail! Put on your earbuds and start walking. I'll
+              read the microclimate, foliage, and forest telemetry ahead of
+              you."
+            </p>
+          </div>
+        </div>
+
+        <!-- Live Voice & Custom Question Input (Ask Anything) -->
+        <section class="section">
+          <h3 class="section-title">
+            💬 Ask <span class="assistant-name">roam</span> Anything
+          </h3>
+          <div class="wake-row">
+            <button id="btn-wake" class="btn-wake" aria-pressed="false">
+              👂 Hands-free: "Hey <span class="assistant-name">roam</span>"
+            </button>
+            <span id="wake-status" class="wake-status"
+              >Listening starts automatically. Say "Hey roam", then your
+              question. Works in Chrome and Edge with the screen on.</span
+            >
+          </div>
+          <div class="custom-input-box">
+            <button
+              id="btn-mic"
+              class="btn-mic"
+              title="Click to speak through microphone"
+            >
+              🎙️
+            </button>
+            <input
+              type="text"
+              id="input-query"
+              placeholder="Ask: 'What is that bird singing?', 'Are these berries edible?', 'How much water should I drink?'"
+            />
+            <button id="btn-send-query" class="btn-send">Ask</button>
+          </div>
+          <div id="mic-status" class="mic-status-text"></div>
+
+          <!-- Prompt chips for quick suggestions -->
+          <div class="prompt-chips" style="margin-top: 12px">
+            <button
+              class="chip"
+              data-query="What makes that two-tone whistling bird call?"
+            >
+              🐦 Bird Song
+            </button>
+            <button
+              class="chip"
+              data-query="Are the sugar maple leaves peaking at this elevation?"
+            >
+              🍁 Fall Foliage
+            </button>
+            <button
+              class="chip"
+              data-query="Is that ruffled golden mushroom near the roots edible?"
+            >
+              🍄 Wild Foraging
+            </button>
+            <button
+              class="chip"
+              data-query="How steep is this trail and when should I drink water?"
+            >
+              💧 Hydration & Grade
+            </button>
+          </div>
+        </section>
+
+        <!-- Roam Outdoor Companion: find a trail, plan, save, go outside -->
+        <section class="section">
+          <h3 class="section-title">
+            🧭 Ask <span class="assistant-name">roam</span> to plan your
+            outing
+          </h3>
+          <p class="settings-desc" style="margin-bottom: 10px">
+            Roam understands what you want and uses real tools: trail search,
+            live weather, a hike plan, and memory. Say things like
+            <em>"find me an easy hike"</em>, <em>"what should I pack?"</em>, or
+            <em>"remember I like quiet trails"</em>.
+          </p>
+
+          <div class="custom-input-box">
+            <input
+              type="text"
+              id="roam-input"
+              placeholder="e.g. Find me an easy trail under 5 km, or plan a hike for this morning"
+            />
+            <button id="roam-send" class="btn-send">Ask roam</button>
+          </div>
+
+          <div class="prompt-chips" style="margin-top: 12px">
+            <button class="roam-chip" data-q="Find me an easy hike for this morning">
+              🥾 Find a trail
+            </button>
+            <button class="roam-chip" data-q="What should I pack, and what's the weather?">
+              🎒 Plan & pack
+            </button>
+            <button class="roam-chip" data-q="Remember that I prefer quiet trails under 5 km">
+              🧠 Save preference
+            </button>
+            <button class="roam-chip" data-q="What do I prefer?">
+              🔎 Recall memory
+            </button>
+            <button class="roam-chip" data-q="Start my hike">
+              🚶 Start session
+            </button>
+            <button class="roam-chip" data-q="Is the device connected?">
+              🔌 Device status
+            </button>
+          </div>
+
+          <!-- Roam's spoken answer -->
+          <div id="roam-answer" class="roam-answer" hidden>
+            <div class="narrator-header">
+              <span class="ranger-tag">🧭 <span class="assistant-name">roam</span>, outdoor companion</span>
+              <span class="model-tag" id="roam-model"></span>
+            </div>
+            <p id="roam-text" class="narrator-text"></p>
+            <div id="roam-data" class="roam-data"></div>
+          </div>
+        </section>
+
+        <!-- Saved trails, memory, journal, and device -->
+        <section class="section">
+          <div class="roam-tabs" role="tablist">
+            <button class="roam-tab active" data-tab="trails" role="tab">Trails</button>
+            <button class="roam-tab" data-tab="memory" role="tab">Memory</button>
+            <button class="roam-tab" data-tab="journal" role="tab">Journal</button>
+            <button class="roam-tab" data-tab="device" role="tab">Device</button>
+          </div>
+
+          <div class="roam-tab-panel" id="panel-trails">
+            <div class="roam-panel-head">
+              <span id="trails-source" class="metric-sub">Loading sample trails…</span>
+              <button id="trails-refresh" class="btn-secondary">Refresh</button>
+            </div>
+            <div id="trails-list" class="roam-list"></div>
+          </div>
+
+          <div class="roam-tab-panel" id="panel-memory" hidden>
+            <div class="roam-panel-head">
+              <span class="metric-sub">What roam remembers (you control this).</span>
+              <button id="memory-clear" class="btn-secondary">Clear all</button>
+            </div>
+            <div id="memory-list" class="roam-list"></div>
+          </div>
+
+          <div class="roam-tab-panel" id="panel-journal" hidden>
+            <div class="roam-panel-head">
+              <span class="metric-sub">Observations you chose to save.</span>
+              <button id="journal-clear" class="btn-secondary">Clear all</button>
+            </div>
+            <div id="journal-list" class="roam-list"></div>
+          </div>
+
+          <div class="roam-tab-panel" id="panel-device" hidden>
+            <div class="roam-panel-head">
+              <span class="metric-sub" id="device-model">Checking device…</span>
+            </div>
+            <div id="device-status" class="roam-list"></div>
+          </div>
+        </section>
+
+        <!-- Trail Telemetry & TabPFN Live Predictions -->
+        <section class="section">
+          <h3 class="section-title">
+            📊 Prior Labs TabPFN Tabular Intelligence
+          </h3>
+          <div class="telemetry-grid">
+            <div class="metric-card">
+              <span class="metric-label">Elevation & Grade</span>
+              <div class="metric-value" id="val-elevation">
+                1,350 m <small>(14.2% incline)</small>
+              </div>
+              <input
+                type="range"
+                id="slider-elevation"
+                min="500"
+                max="2800"
+                value="1350"
+                step="50"
+                class="slider"
+              />
+            </div>
+
+            <div class="metric-card highlight-card">
+              <span class="metric-label">TabPFN Foliage Prediction</span>
+              <div class="metric-value amber" id="val-foliage">
+                Peak Color (Amber/Red)
+              </div>
+              <span class="metric-sub" id="val-foliage-conf"
+                >94% Zero-Shot Confidence</span
+              >
+            </div>
+
+            <div class="metric-card">
+              <span class="metric-label">TabPFN Fatigue & Hydration</span>
+              <div class="metric-value green" id="val-fatigue">
+                Moderate Risk
+              </div>
+              <span class="metric-sub" id="val-hydration"
+                >Hydration: 770 mL / hr</span
+              >
+            </div>
+
+            <div class="metric-card">
+              <span class="metric-label">Wildlife Sighting Prob</span>
+              <div class="metric-value" id="val-wildlife">35% Chance</div>
+              <span class="metric-sub">Black Bear & Nuthatch active</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Cloud API Keys Drawer (Optional) -->
+        <details class="settings-drawer">
+          <summary>
+            ⚙️ Model &amp; keys (optional, stays in this browser)
+          </summary>
+          <div class="settings-content">
+            <p class="settings-desc">
+              Leave blank to use the server default (a local
+              <strong>Ollama</strong> model such as <code>gemma2:9b</code>). Or
+              point at any OpenAI-compatible endpoint, local or hosted:
+            </p>
+            <div class="settings-row">
+              <label>LLM Base URL:</label>
+              <input
+                type="text"
+                id="input-llm-base"
+                placeholder="http://localhost:11434/v1 (Ollama) or https://api.groq.com/openai/v1"
+              />
+            </div>
+            <div class="settings-row">
+              <label>LLM API Key:</label>
+              <input
+                type="password"
+                id="input-llm-key"
+                placeholder="Only needed for hosted endpoints"
+              />
+            </div>
+            <div class="settings-row">
+              <label>Model Name:</label>
+              <input
+                type="text"
+                id="input-llm-model"
+                placeholder="gemma2:9b (local) or openai/gpt-oss-20b (Groq)"
+              />
+            </div>
+            <div class="settings-row">
+              <label>ElevenLabs API Key (optional, natural voice):</label>
+              <input
+                type="password"
+                id="input-eleven-key"
+                placeholder="xi-..."
+              />
+            </div>
+            <button id="btn-save-keys" class="btn-save-keys">
+              Save to Session
+            </button>
+            <span id="save-keys-status" class="save-keys-status"></span>
+            <p class="settings-desc" style="margin-top: 8px; font-size: 11px">
+              💡 <strong>Fully offline:</strong> install
+              <a href="https://ollama.com" target="_blank" rel="noopener"
+                >Ollama</a
+              >, run <code>ollama pull gemma2:9b</code>, and leave the fields
+              blank. Nothing leaves your machine.
+            </p>
+          </div>
+        </details>
+
+        <!-- Sentry Agent Tracing & Open Innovation Footer -->
+        <section class="section tech-specs">
+          <div class="tech-header">
+            <span>🔍 Live trace & system log</span>
+            <button id="btn-sync" class="btn-secondary">
+              ⚡ Save checkpoint
+            </button>
+          </div>
+          <div class="terminal-log" id="terminal-log">
+            <div class="log-line text-dim">
+              > Naturalist pipeline ready: TabPFN, field guide, park advisory,
+              LLM, voice.
+            </div>
+            <div class="log-line text-green">
+              > Hands-free wake word armed on demand (Web Speech API, Chrome and
+              Edge).
+            </div>
+            <div class="log-line text-blue">
+              > Voice output: ElevenLabs when a key is set, otherwise browser
+              speech.
+            </div>
+            <div class="log-line text-amber">
+              > Sentry tracing is active only when SENTRY_DSN is set on the
+              server.
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <!-- Footer -->
+      <footer class="app-footer">
+        <p>
+          Built with ❤️ for <strong>Hacktoberfest 2026: Touch Grass</strong>.
+          Powered by Open-Source AI.
+        </p>
+        <p class="privacy-note">
+          🔒 Run the model locally with Ollama and the naturalist answers
+          without any internet connection. Browser speech recognition in Chrome
+          and Edge may use the browser vendor's speech service.
+        </p>
+      </footer>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>

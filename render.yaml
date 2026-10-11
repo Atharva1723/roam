@@ -1,0 +1,41 @@
+services:
+  - type: web
+    name: roam-runtime
+    env: node
+    plan: free
+    # Build TypeScript to dist/ and run compiled JS with plain `node`, so no
+    # dev-only runtime deps (like tsx) are needed under NODE_ENV=production.
+    # Python is intentionally NOT installed here: TabPFN and park advisories
+    # fall back to labeled local heuristics/simulations when it is absent.
+    buildCommand: npm install && npm run build
+    startCommand: node dist/server.js
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: "10000"
+      - key: ASSISTANT_NAME
+        value: roam
+      - key: WAKE_WORDS
+        value: roam,rome,rom
+      # Hosted open-weight model for the live demo. Ollama cannot run on the
+      # free tier; this points the app at a hosted open-weight endpoint instead.
+      # Groq's free tier serves open models. Provide the key in the dashboard.
+      - key: LLM_BASE_URL
+        value: https://api.groq.com/openai/v1
+      - key: LLM_MODEL
+        value: llama-3.1-8b-instant
+      - key: LLM_API_KEY
+        sync: false
+      # Optional services — all have offline fallbacks. Leave unset to deploy
+      # with zero secrets; the app then runs on its deterministic fallbacks.
+      - key: SENTRY_DSN
+        sync: false
+      - key: ELEVENLABS_API_KEY
+        sync: false
+      - key: SERPAPI_API_KEY
+        sync: false
+      - key: GROQ_API_KEY
+        sync: false
+

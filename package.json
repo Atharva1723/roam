@@ -1,0 +1,51 @@
+{
+  "name": "roam",
+  "version": "1.2.1",
+  "description": "Roam - Screen-free, voice-first trail naturalist and outdoor companion. Open-weight LLM, TabPFN tabular predictions, trail planning, memory, and hands-free wake word (\"Hey roam\").",
+  "main": "dist/server.js",
+  "private": true,
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "start": "tsx src/server.ts",
+    "tabpfn:serve": "uvicorn tabpfn_api:app --app-dir services --port 8001",
+    "test:tabpfn": "python services/tabpfn_service.py --elevation 1500 --incline 14 --temp 16 --day 280",
+    "test:api": "node test_api.js",
+    "test:wake": "node test_wake.js",
+    "test:outdoor": "npm run build && node test_outdoor.js",
+    "test:offline": "npm run build && node test_offline.js",
+    "demo": "node demo.js",
+    "test": "node test_wake.js && node test_outdoor.js && node test_offline.js"
+  },
+  "keywords": [
+    "hacktoberfest",
+    "open-weight",
+    "gemma",
+    "ollama",
+    "tabpfn",
+    "elevenlabs",
+    "sentry",
+    "wake-word",
+    "touch-grass",
+    "open-source-ai"
+  ],
+  "author": "Roam Team",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@sentry/node": "^8.34.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.12.7",
+    "tsx": "^4.19.0",
+    "typescript": "^5.4.5"
+  }
+}

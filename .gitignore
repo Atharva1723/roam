@@ -1,0 +1,21 @@
+node_modules/
+dist/
+.env
+__pycache__/
+*.pyc
+.venv/
+
+# Runtime user data (memory, journal) — local only, never committed
+data/memory.json
+data/journal.json
+data/*.tmp
+
+# Logs and local scratch
+*.log
+npm-debug.log*
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+
+

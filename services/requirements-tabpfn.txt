@@ -1,0 +1,5 @@
+# Optional: real Prior Labs TabPFN. Pulls in PyTorch (large). Install on a machine with >= 4 GB RAM.
+# Install after requirements.txt:  pip install -r services/requirements-tabpfn.txt
+# Model weights are downloaded on first use and are subject to the TabPFN license terms.
+tabpfn>=2.0.0
+torch>=2.2.0
